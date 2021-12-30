@@ -10,6 +10,11 @@ type Point struct {
 	Y int
 }
 
+type PointJson struct {
+	X int `json:"x,omitempty"`
+	Y int `json:"y,omitempty"`
+}
+
 func main() {
 	p := &Point{X: 10, Y: 5}
 	fmt.Println(p)
@@ -39,4 +44,14 @@ func main() {
 	fmt.Println(value)
 	rv.SetMapIndex(reflect.ValueOf("foo"), reflect.ValueOf(2))
 	// rv.Int() // panic
+
+	t := reflect.TypeOf(PointJson{X: 10, Y: 0})
+	for i := 0; i < t.NumField(); i++ {
+		f := t.Field(i)
+		if f.PkgPath != "" {
+			continue
+		}
+		tag := f.Tag.Get("json")
+		fmt.Println(tag)
+	}
 }
